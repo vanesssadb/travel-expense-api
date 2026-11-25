@@ -9,6 +9,37 @@ API REST para registrar e acompanhar gastos de viagem em múltiplas moedas. Cada
 - **Conversão de moeda:** cada gasto é convertido para a moeda base da viagem por uma API de câmbio externa. A cotação usada fica gravada junto com o gasto.
 - **Resumo da viagem:** total gasto, total por categoria, orçamento restante, percentual usado e aviso de orçamento estourado.
 
+## Modelo de dados
+
+### `trips`
+
+| Coluna | Tipo | Regras |
+|---|---|---|
+| `id` | `BIGSERIAL` | PK |
+| `name` | `VARCHAR(120)` | obrigatório |
+| `destination` | `VARCHAR(120)` | obrigatório |
+| `base_currency` | `CHAR(3)` | código ISO 4217 (RN04) |
+| `budget` | `NUMERIC(19,2)` | `> 0` (RN01) |
+| `start_date` | `DATE` | obrigatório |
+| `end_date` | `DATE` | `>= start_date` (RN02) |
+
+### `expenses`
+
+| Coluna | Tipo | Regras |
+|---|---|---|
+| `id` | `BIGSERIAL` | PK |
+| `trip_id` | `BIGINT` | FK para `trips`, `ON DELETE CASCADE` |
+| `description` | `VARCHAR(255)` | obrigatório |
+| `category` | `VARCHAR(20)` | `FOOD`, `TRANSPORT`, `LODGING`, `LEISURE`, `SHOPPING` ou `OTHER` |
+| `original_amount` | `NUMERIC(19,2)` | `> 0` (RN03) |
+| `original_currency` | `CHAR(3)` | código ISO 4217 (RN04) |
+| `exchange_rate` | `NUMERIC(19,8)` | `> 0`; gravada no registro e não muda depois (RN06) |
+| `converted_amount` | `NUMERIC(19,2)` | `> 0`; valor na moeda base da viagem |
+| `expense_date` | `DATE` | obrigatório |
+| `created_at` | `TIMESTAMPTZ` | preenchido pelo banco |
+
+No Java, todos os valores monetários e cotações usam `BigDecimal`. O schema é versionado com Flyway (`src/main/resources/db/migration`).
+
 ## Fora do escopo da v1
 
 | Item | Motivo |

@@ -1,4 +1,3 @@
-```markdown
 # Plano do Projeto: Plataforma de Gastos de Viagem (v1)
 
 ## 1. Escopo Fechado
@@ -68,7 +67,7 @@
 **Monolito em camadas**, organizado **por funcionalidade (feature)**:
 
 ```text
-com.vanessa.travel
+br.com.vanesssadb.travel_expense_api
 ├── trip
 │   ├── Trip.java (entity)
 │   ├── TripRepository.java
@@ -237,4 +236,3 @@ Opção 2.
 - **Resiliência:** Tratar respostas inesperadas, timeouts ou indisponibilidade da API externa de câmbio (RN08).
 - **Controle de escopo:** Novas ideias fora do escopo definido devem ser registradas como issues separadas com o rótulo `v2`.
 
-```
